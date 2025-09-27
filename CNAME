@@ -1,4 +1,1 @@
-"stone-cipher-23.org" | Set-Content -NoNewline CNAME
-git add CNAME
-git commit -m "Add CNAME"
-git push
+stone-cipher-23.org
