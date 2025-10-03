@@ -2,45 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Stone-Cipher-23</title>
+  <title>My Test Page</title>
   <style>
-    body {
-      background: #0b132b;
-      color: #ffffff;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 80px;
-      margin: 0;
-    }
-    h1 {
-      font-size: 3em;
-      margin-bottom: 0.5em;
-    }
-    p {
-      font-size: 1.2em;
-      margin-bottom: 2em;
-    }
-    .button {
-      display: inline-block;
-      margin: 10px;
-      padding: 12px 24px;
-      background: #00aaff;
-      color: #000000;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 1em;
-      transition: background 0.2s;
-    }
-    .button:hover {
-      background: #0090dd;
-    }
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #feed { list-style: none; padding: 0; }
+    #feed li { margin: 6px 0; }
   </style>
 </head>
 <body>
-  <h1>Stone-Cipher-23</h1>
-  <p>Private feed hub. Coming soon.</p>
-  <a href="contact.html" class="button">Contact</a>
-  <a href="about.html" class="button">About</a>
+
+  <h1>Trading Chart and News</h1>
+
+  <!-- TradingView Widget BEGIN -->
+  <div class="tradingview-widget-container">
+    <div id="tradingview_chart"></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script type="text/javascript">
+      new TradingView.widget({
+        "width": 600,
+        "height": 400,
+        "symbol": "NASDAQ:AAPL",  // change ticker here
+        "interval": "D",
+        "timezone": "Etc/UTC",
+        "theme": "light",
+        "style": "1",
+        "locale": "en",
+        "container_id": "tradingview_chart"
+      });
+    </script>
+  </div>
+  <!-- TradingView Widget END -->
+
+  <h2>Yahoo Finance News (AAPL)</h2>
+  <ul id="feed">Loading...</ul>
+
+  <script>
+    async function loadRSS() {
+      // Yahoo Finance RSS (AAPL headlines)
+      const feedUrl = "https://feeds.finance.yahoo.com/rss/2.0/headline?s=AAPL&region=US&lang=en-US";
+      // free proxy to bypass CORS (ok for testing, replace later with your own server if needed)
+      const proxy = "https://api.allorigins.win/get?url=" + encodeURIComponent(feedUrl);
+      const res = await fetch(proxy);
+      const data = await res.json();
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(data.contents, "text/xml");
+      const items = xml.querySelectorAll("item");
+      const ul = document.getElementById("feed");
+      ul.innerHTML = "";
+      items.forEach((item, i) => {
+        if (i < 10) {
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.href = item.querySelector("link").textContent;
+          a.textContent = item.querySelector("title").textContent;
+          a.target = "_blank";
+          li.appendChild(a);
+          ul.appendChild(li);
+        }
+      });
+    }
+    loadRSS();
+  </script>
+
 </body>
 </html>
