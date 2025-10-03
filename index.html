@@ -15,31 +15,28 @@
   <ul id="feed">Loading…</ul>
 
   <script>
-  (async () => {
-    // your RSS feed
-    const FEED = "https://rss.app/feed/WDriDaZ6zhsq675h";
+(async () => {
+  const FEED = "https://rss.app/feed/WDriDaZ6zhsq675h";
+  const url = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(FEED);
 
-    // simple CORS bypass for static sites; OK for testing
-    const url = "https://api.allorigins.win/get?url=" + encodeURIComponent(FEED);
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("proxy error " + res.status);
+    const data = await res.json();
+    const items = (data.items || []).slice(0, 15);
 
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      const xml = new DOMParser().parseFromString(data.contents, "text/xml");
-
-      const items = Array.from(xml.querySelectorAll("item")).slice(0, 15);
-      const ul = document.getElementById("feed");
-      ul.innerHTML = items.map(it => {
-        const title = it.querySelector("title")?.textContent || "Untitled";
-        const link  = it.querySelector("link")?.textContent || "#";
-        const date  = it.querySelector("pubDate")?.textContent || "";
-        return `<li><a href="${link}" target="_blank" rel="noopener">${title}</a><br><small>${date}</small></li>`;
-      }).join("") || "<li>No items.</li>";
-    } catch (e) {
-      document.getElementById("feed").innerHTML = "<li>Failed to load feed.</li>";
-      console.error(e);
-    }
-  })();
-  </script>
-</body>
-</html>
+    const ul = document.getElementById("feed");
+    ul.innerHTML = items.length
+      ? items.map(it => {
+          const title = it.title || "Untitled";
+          const link  = it.link || "#";
+          const date  = it.pubDate || "";
+          return `<li><a href="${link}" target="_blank" rel="noopener">${title}</a><br><small>${date}</small></li>`;
+        }).join("")
+      : "<li>No items.</li>";
+  } catch (e) {
+    document.getElementById("feed").innerHTML = "<li>Failed to load feed.</li>";
+    console.error(e);
+  }
+})();
+</script>
