@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>My RSS Page</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     h1 { margin-bottom: 8px; }
@@ -14,42 +15,44 @@
   <h1>Latest posts</h1>
   <ul id="feed">Loading…</ul>
 
- <script>
-(async () => {
-  const FEED = "https://rss.app/feed/WDriDaZ6zhsq675h";
+  <script>
+  (async () => {
+    // swap to your feed after testing:
+    // const FEED = "https://rss.app/feed/WDriDaZ6zhsq675h";
+    const FEED = "https://hnrss.org/frontpage";
 
-  const attempts = [
-    FEED,                                                    // direct (if CORS allowed)
-    "https://cors.isomorphic-git.org/" + FEED,              // CORS proxy 1
-    "https://r.jina.ai/http://" + FEED.replace(/^https?:\/\//, "") // CORS proxy 2
-  ];
+    const attempts = [
+      FEED,
+      "https://cors.isomorphic-git.org/" + FEED,
+      "https://r.jina.ai/http/" + FEED.replace(/^https?:\/\//, "")
+    ];
 
-  async function loadAsXML(url) {
-    const res = await fetch(url, { cache: "no-store" });
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const text = await res.text();
-    const xml = new DOMParser().parseFromString(text, "text/xml");
-    const items = Array.from(xml.querySelectorAll("item"));
-    if (!items.length) throw new Error("No <item> entries");
-    return items.slice(0, 15).map(it => ({
-      title: it.querySelector("title")?.textContent || "Untitled",
-      link:  it.querySelector("link")?.textContent || "#",
-      date:  it.querySelector("pubDate")?.textContent || ""
-    }));
-  }
-
-  const ul = document.getElementById("feed");
-  for (const url of attempts) {
-    try {
-      const items = await loadAsXML(url);
-      ul.innerHTML = items.map(i =>
-        `<li><a href="${i.link}" target="_blank" rel="noopener">${i.title}</a><br><small>${i.date}</small></li>`
-      ).join("");
-      return;
-    } catch (e) {
-      // try next
+    async function loadAsXML(url) {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const text = await res.text();
+      const xml = new DOMParser().parseFromString(text, "text/xml");
+      const items = Array.from(xml.querySelectorAll("item"));
+      if (!items.length) throw new Error("No <item> entries");
+      return items.slice(0, 15).map(it => ({
+        title: it.querySelector("title")?.textContent || "Untitled",
+        link:  it.querySelector("link")?.textContent || "#",
+        date:  it.querySelector("pubDate")?.textContent || ""
+      }));
     }
-  }
-  ul.innerHTML = "<li>Failed to load feed.</li>";
-})();
-</script>
+
+    const ul = document.getElementById("feed");
+    for (const url of attempts) {
+      try {
+        const items = await loadAsXML(url);
+        ul.innerHTML = items.map(i =>
+          `<li><a href="${i.link}" target="_blank" rel="noopener">${i.title}</a><br><small>${i.date}</small></li>`
+        ).join("");
+        return;
+      } catch (e) { /* try next */ }
+    }
+    ul.innerHTML = "<li>Failed to load feed.</li>";
+  })();
+  </script>
+</body>
+</html>
