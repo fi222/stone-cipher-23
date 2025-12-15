@@ -4,19 +4,23 @@
   <meta charset="UTF-8">
   <title>Stone Cipher 23</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Password gate (simple, temporary) -->
+  <script>
+    (function () {
+      const password = "TEMP123"; // CHANGE THIS
+      const input = prompt("Enter password:");
+      if (input !== password) {
+        document.documentElement.innerHTML =
+          "<h1 style='background:#000;color:#f00;font-family:monospace;padding:40px'>Access denied</h1>";
+        throw new Error("Unauthorized");
+      }
+    })();
+  </script>
+
   <style>
     body {
-     <script>
-  (function () {
-    const password = "TEMP123"; // change this
-    const input = prompt("Enter password:");
-    if (input !== password) {
-      document.body.innerHTML = "<h1>Access denied</h1>";
-      throw new Error("Unauthorized");
-    }
-  })();
-</script>
- margin: 0;
+      margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #0b0f1a;
       color: #e5e7eb;
@@ -60,9 +64,11 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Stone Cipher 23</h1>
+
     <div class="tagline">
       Tools, analysis, and quiet intelligence.
     </div>
@@ -76,7 +82,8 @@
     <p>
       The Council is an ongoing experiment in comparative AI reasoning.
       Each question is posed to multiple AI systems, their responses are published
-      unedited, and a human synthesis resolves agreement, disagreement, and blind spots.
+      unedited, and a human synthesis resolves agreement, disagreement,
+      and blind spots.
     </p>
 
     <p>
@@ -95,5 +102,3 @@
   </div>
 </body>
 </html>
-
-  
