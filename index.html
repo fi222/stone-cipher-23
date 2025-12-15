@@ -1,58 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>My RSS Page</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <title>Stone Cipher 23</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h1 { margin-bottom: 8px; }
-    #feed { list-style: none; padding: 0; }
-    #feed li { margin: 8px 0; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b0f1a;
+      color: #e5e7eb;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+    }
+    h2 {
+      margin-top: 50px;
+      font-size: 1.6rem;
+      border-bottom: 1px solid #1f2937;
+      padding-bottom: 8px;
+    }
+    p {
+      font-size: 1.1rem;
+      color: #d1d5db;
+    }
+    .tagline {
+      font-size: 1.3rem;
+      color: #9ca3af;
+      margin-bottom: 40px;
+    }
+    a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .footer {
+      margin-top: 80px;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
   </style>
 </head>
 <body>
-  <h1>Latest posts</h1>
-  <ul id="feed">Loading…</ul>
+  <div class="container">
+    <h1>Stone Cipher 23</h1>
+    <div class="tagline">
+      Tools, analysis, and quiet intelligence.
+    </div>
 
-  <script>
-  (async () => {
-    // swap to your feed after testing:
-    // const FEED = "https://rss.app/feed/WDriDaZ6zhsq675h";
-    const FEED = "https://hnrss.org/frontpage";
+    <p>
+      Stone Cipher 23 is an independent project focused on building practical tools,
+      analyzing ideas rigorously, and filtering information without hype.
+    </p>
 
-    const attempts = [
-      FEED,
-      "https://cors.isomorphic-git.org/" + FEED,
-      "https://r.jina.ai/http/" + FEED.replace(/^https?:\/\//, "")
-    ];
+    <h2>The Council</h2>
+    <p>
+      The Council is an ongoing experiment in comparative AI reasoning.
+      Each question is posed to multiple AI systems, their responses are published
+      unedited, and a human synthesis resolves agreement, disagreement, and blind spots.
+    </p>
 
-    async function loadAsXML(url) {
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      const text = await res.text();
-      const xml = new DOMParser().parseFromString(text, "text/xml");
-      const items = Array.from(xml.querySelectorAll("item"));
-      if (!items.length) throw new Error("No <item> entries");
-      return items.slice(0, 15).map(it => ({
-        title: it.querySelector("title")?.textContent || "Untitled",
-        link:  it.querySelector("link")?.textContent || "#",
-        date:  it.querySelector("pubDate")?.textContent || ""
-      }));
-    }
+    <p>
+      <a href="council/">Enter the Council →</a>
+    </p>
 
-    const ul = document.getElementById("feed");
-    for (const url of attempts) {
-      try {
-        const items = await loadAsXML(url);
-        ul.innerHTML = items.map(i =>
-          `<li><a href="${i.link}" target="_blank" rel="noopener">${i.title}</a><br><small>${i.date}</small></li>`
-        ).join("");
-        return;
-      } catch (e) { /* try next */ }
-    }
-    ul.innerHTML = "<li>Failed to load feed.</li>";
-  })();
-  </script>
+    <h2>What to Expect</h2>
+    <p>
+      This site will grow over time. Early content focuses on methodology,
+      limits, and design decisions. Tools and downloadable software will follow.
+    </p>
+
+    <div class="footer">
+      © Stone Cipher 23
+    </div>
+  </div>
 </body>
 </html>
+
+  
